@@ -1,0 +1,90 @@
+--- dirgraph.odevzdany	2020-04-13 17:06:54.935619083 +0200
++++ dirgraph	2020-04-13 19:15:50.404521999 +0200
+@@ -10,7 +10,7 @@
+ NORMALIZ="";
+ DIR="./";
+ 
+-DIR_COUNT=1;
++DIR_COUNT=0;
+ FILE_COUNT=0;
+ ROOT_DIR="";
+ 
+@@ -117,6 +117,7 @@
+ cd $DIR
+ ROOT_DIR=$(pwd);
+ cd $TEMP_ROOT_DIR;
++ROOT_DIR_RELATIVE=$DIR; 
+ 
+ 
+ ## check root dir for regex
+@@ -127,18 +128,18 @@
+ 
+ 
+ ## dirs and files loop
+-if [[ $DIR == *"/" ]]; then
+-	DIR="$DIR*";
+-else
+-	DIR="$DIR/*";
+-fi
+-SUBDIR="$DIR*/*";
+-for file in $DIR $SUBDIR; do
++#if [[ $DIR == *"/" ]]; then
++#	DIR="$DIR*";
++#else
++#	DIR="$DIR/*";
++#fi
++#SUBDIR="$DIR*/*";
++for file in $(find ${DIR}); do
+ 	#echo $file;
+ 	#echo $(basename "$file");
+ 	if [ -r "$file" ]; then
+-		if [ ! -d "$file" ]; then
+-			if [[ ! "$file" =~ $IGNOR ]] || [[ $IGNOR == "" ]]; then # check regex argument
++		if [[ ! "$file" =~ $IGNOR ]] || [[ $IGNOR == "" ]]; then # check regex argument
++			if [ ! -d "$file" ]; then
+ 				SIZE="$(($(wc -c < "$file")+0))";
+ 				if [ "$SIZE" -lt 100 ]; then
+ 					((++BB));
+@@ -160,19 +161,19 @@
+ 					((++GGiB));
+ 				fi			
+ 				((++FILE_COUNT));
+-			#else
+-				#echo "ignored file";
++			else
++				((++DIR_COUNT));
++				#echo "PATH IS DIR!";
+ 			fi
+-		else
+-			((++DIR_COUNT));
+-			#echo "PATH IS DIR!";
++		#else
++			#echo "ignored file or dir";
+ 		fi
+ 	else
+-		if [[ $file != "./**/*" ]]; then 
++		#if [[ $file != *"/**/*" ]]; then 
+ 			echo $file;
+ 			echo "NO PERMISSION";
+ 			EXIT_CODE=1;
+-		fi
++		#fi
+ 	fi
+ done
+ 
+@@ -219,7 +220,7 @@
+ if [[ $EXIT_CODE == 1 ]]; then
+ 	echo "-----------------------";
+ fi
+-echo "Root directory: $ROOT_DIR";
++echo "Root directory: $ROOT_DIR_RELATIVE";
+ echo "Directories: $DIR_COUNT";
+ echo "All files: $FILE_COUNT";
+ echo "File size histogram:";
+@@ -274,4 +275,4 @@
+ 
+ 
+ ## done
+-exit $EXIT_CODE;
+\ Chybí znak konce řádku na konci souboru
++exit $EXIT_CODE;

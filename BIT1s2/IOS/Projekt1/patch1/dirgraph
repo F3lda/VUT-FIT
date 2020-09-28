@@ -1,0 +1,278 @@
+###!/bin/bash
+
+#### VARS
+## You cannot have spaces around your '=' sign. 
+EXIT_CODE=0;
+MAX_ROW_SIZE=79;
+ONE_HASH_DIVISION=1;
+
+IGNOR="";
+NORMALIZ="";
+DIR="./";
+
+DIR_COUNT=0;
+FILE_COUNT=0;
+ROOT_DIR="";
+
+BB=0;	# <100 B
+KiB=0;	# <1 KiB
+KKiB=0;	# <10 KiB
+KKKiB=0;# <100 KiB
+MiB=0;	# <1 MiB
+MMiB=0;	# <10 MiB
+MMMiB=0;# <100 MiB
+GiB=0;	# <1 GiB
+GGiB=0;	# >=1 GiB
+
+
+
+#### FUNCTIONS
+function error()
+{
+	if [ $# -gt 0 ]; then
+		echo "FATAL ERROR: $1!";
+		echo "Done.";
+		exit 1;
+	fi
+}
+
+function print_x_hashes()
+{
+	if [ $# -gt 0 ]; then
+		for ((i = 0; i < $1; i++)); do
+			printf "#";
+		done
+		echo "";
+	fi
+}
+
+
+
+#### MAIN
+## parse arguments
+if [ $# -gt 0 ]; then    
+	ARGS="$@"
+    for arg in $ARGS
+    do
+        if [[ $IGNOR == "-i" ]]; then
+			#echo "-> ignor files argument";
+			IGNOR=$arg;
+        elif [[ $arg == "-i"* ]]; then
+			#echo "-> ignor files";
+			if [[ $IGNOR == "" ]]; then
+				if [[ $arg == "-i" ]]; then
+					IGNOR="-i";
+				else
+					TEMP_ARRAY=($arg);
+					ARRAY_LENGTH="${#TEMP_ARRAY[@]}"
+					if [ $ARRAY_LENGTH -gt 1 ]; then
+						IGNOR=${ARRAY_LENGTH[1]}
+					else
+						error "wrong syntax of [-i] switch";
+					fi
+				fi
+            else
+                error "too many [-i] switches";
+            fi
+        elif [[ $arg == "-n" ]]; then
+            #echo "-> normalizace";
+			if [[ $NORMALIZ == "" ]]; then
+                NORMALIZ="n";
+            else
+                error "too many [-n] switches";
+            fi
+        else
+            if [[ $DIR == "./" ]]; then
+				#echo "-> DIR";
+                if [ ! -d "$arg" ]; then
+					#echo "dir doesn't exist";
+					error "root dir not found";
+				else
+					#echo "dir exists";
+					DIR=$arg;
+				fi
+            else
+				error "too many or wrong argument/s";
+            fi
+        fi
+    done
+	if [[ $IGNOR == "-i" ]]; then
+		error "missing regular expression of ignored files and dirs";
+    elif [[ $IGNOR == "./" ]] || [[ $IGNOR == "." ]]; then
+		error "wrong regular expression of ignored files and dirs";
+    fi
+fi
+#echo "INPUT OK!";
+
+
+## check standard input
+if [ -t 0 ]; then # terminal
+	MAX_ROW_SIZE="$(($(tput cols)-1))";
+fi
+MAX_ROW_SIZE=$(($MAX_ROW_SIZE-12)); # minus row title
+
+
+## get root dir
+TEMP_ROOT_DIR=$(pwd);
+cd $DIR
+ROOT_DIR=$(pwd);
+cd $TEMP_ROOT_DIR;
+ROOT_DIR_RELATIVE=$DIR; 
+
+
+## check root dir for regex
+if [[ "$ROOT_DIR" =~ $IGNOR ]] && [[ $IGNOR != "" ]]; then # check regex argument
+	echo $ROOT_DIR;
+	error "regular expression matches ROOT DIR";
+fi
+
+
+## dirs and files loop
+#if [[ $DIR == *"/" ]]; then
+#	DIR="$DIR*";
+#else
+#	DIR="$DIR/*";
+#fi
+#SUBDIR="$DIR*/*";
+for file in $(find ${DIR}); do
+	#echo $file;
+	#echo $(basename "$file");
+	if [ -r "$file" ]; then
+		if [[ ! "$file" =~ $IGNOR ]] || [[ $IGNOR == "" ]]; then # check regex argument
+			if [ ! -d "$file" ]; then
+				SIZE="$(($(wc -c < "$file")+0))";
+				if [ "$SIZE" -lt 100 ]; then
+					((++BB));
+				elif [ "$SIZE" -lt 1024 ]; then
+					((++KiB));
+				elif [ "$SIZE" -lt 10240 ]; then
+					((++KKiB));
+				elif [ "$SIZE" -lt 102400 ]; then
+					((++KKKiB));
+				elif [ "$SIZE" -lt 1048576 ]; then
+					((++MiB));
+				elif [ "$SIZE" -lt 10485760 ]; then
+					((++MMiB));
+				elif [ "$SIZE" -lt 104857600 ]; then
+					((++MMMiB));
+				elif [ "$SIZE" -lt 1073741824 ]; then
+					((++GiB));
+				elif [ "$SIZE" -ge 1073741824 ]; then
+					((++GGiB));
+				fi			
+				((++FILE_COUNT));
+			else
+				((++DIR_COUNT));
+				#echo "PATH IS DIR!";
+			fi
+		#else
+			#echo "ignored file or dir";
+		fi
+	else
+		#if [[ $file != *"/**/*" ]]; then 
+			echo $file;
+			echo "NO PERMISSION";
+			EXIT_CODE=1;
+		#fi
+	fi
+done
+
+
+## normalize
+if [[ $NORMALIZ == "n" ]]; then
+	MAX_ROW=$BB;
+	if [ $KiB -gt $MAX_ROW ]; then
+		MAX_ROW=$KiB;
+	fi
+	if [ $KKiB -gt $MAX_ROW ]; then
+		MAX_ROW=$KKiB;
+	fi
+	if [ $KKKiB -gt $MAX_ROW ]; then
+		MAX_ROW=$KKKiB;
+	fi
+	if [ $MiB -gt $MAX_ROW ]; then
+		MAX_ROW=$MiB;
+	fi
+	if [ $MMiB -gt $MAX_ROW ]; then
+		MAX_ROW=$MMiB;
+	fi
+	if [ $MMMiB -gt $MAX_ROW ]; then
+		MAX_ROW=$MMMiB;
+	fi
+	if [ $GiB -gt $MAX_ROW ]; then
+		MAX_ROW=$GiB;
+	fi
+	if [ $GGiB -gt $MAX_ROW ]; then
+		MAX_ROW=$GGiB;
+	fi
+	
+	if [ $MAX_ROW -gt $MAX_ROW_SIZE ]; then
+		#MAX_ROW_SIZE=$((MAX_ROW_SIZE-1)); # place for ONE_HASH_DIVISION mod rest hash
+		ONE_HASH_DIVISION=$((MAX_ROW/MAX_ROW_SIZE));
+		if [ $((MAX_ROW%MAX_ROW_SIZE)) -gt 0 ]; then
+			ONE_HASH_DIVISION=$((ONE_HASH_DIVISION+1));
+		fi
+	fi
+fi
+
+
+## print report
+if [[ $EXIT_CODE == 1 ]]; then
+	echo "-----------------------";
+fi
+echo "Root directory: $ROOT_DIR_RELATIVE";
+echo "Directories: $DIR_COUNT";
+echo "All files: $FILE_COUNT";
+echo "File size histogram:";
+if [ $ONE_HASH_DIVISION -gt 0 ]; then
+	printf "  <100 B  : ";
+	TEMP_X=$(($BB/ONE_HASH_DIVISION));
+	if [ $(($BB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+	print_x_hashes $TEMP_X;
+	printf "  <1 KiB  : ";
+	TEMP_X=$(($KiB/ONE_HASH_DIVISION));
+	if [ $(($KiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+	print_x_hashes $TEMP_X;
+	printf "  <10 KiB : ";
+	TEMP_X=$(($KKiB/ONE_HASH_DIVISION));
+	if [ $(($KKiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+	print_x_hashes $TEMP_X;
+	printf "  <100 KiB: ";
+	TEMP_X=$(($KKKiB/ONE_HASH_DIVISION));
+	if [ $(($KKKiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+	print_x_hashes $TEMP_X;
+	printf "  <1 MiB  : ";
+	TEMP_X=$(($MiB/ONE_HASH_DIVISION));
+	if [ $(($MiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+	print_x_hashes $TEMP_X;
+	printf "  <10 MiB : ";
+	TEMP_X=$(($MMiB/ONE_HASH_DIVISION));
+	if [ $(($MMiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+	print_x_hashes $TEMP_X;
+	printf "  <100 MiB: ";
+	TEMP_X=$(($MMMiB/ONE_HASH_DIVISION));
+	if [ $(($MMMiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+	print_x_hashes $TEMP_X;
+	printf "  <1 GiB  : ";
+	TEMP_X=$(($GiB/ONE_HASH_DIVISION));
+	if [ $(($GiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+	print_x_hashes $TEMP_X;
+	printf "  >=1 GiB : ";
+	TEMP_X=$(($GGiB/ONE_HASH_DIVISION));
+	if [ $(($GGiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+	print_x_hashes $TEMP_X;
+else
+	echo "  <100 B  : ";
+	echo "  <1 KiB  : ";
+	echo "  <10 KiB : ";
+	echo "  <100 KiB: ";
+	echo "  <1 MiB  : ";
+	echo "  <10 MiB : ";
+	echo "  <100 MiB: ";
+	echo "  <1 GiB  : ";
+	echo "  >=1 GiB : ";
+fi
+
+
+## done
+exit $EXIT_CODE;

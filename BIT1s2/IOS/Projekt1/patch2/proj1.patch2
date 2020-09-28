@@ -1,0 +1,228 @@
+--- dirgraph.odevzdany	2020-04-13 17:06:54.935619000 +0200
++++ dirgraph	2020-04-13 19:16:03.816659225 +0200
+@@ -10,7 +10,7 @@
+ NORMALIZ="";
+ DIR="./";
+ 
+-DIR_COUNT=1;
++DIR_COUNT=0;
+ FILE_COUNT=0;
+ ROOT_DIR="";
+ 
+@@ -46,6 +46,24 @@
+ 	fi
+ }
+ 
++function get_line_length()
++{
++	if [ $# -gt 2 ]; then
++		if [ $# -gt 3 ]; then
++			TEMP12=$(($1*$2));
++			if [ $(($TEMP12%$3)) -gt 0 ]; then
++				echo $(($TEMP12/$3+1));
++			else
++				echo $(($TEMP12/$3));
++			fi
++		else
++			echo $1;
++		fi
++	else
++		echo 0;
++	fi
++}
++
+ 
+ 
+ #### MAIN
+@@ -117,6 +135,7 @@
+ cd $DIR
+ ROOT_DIR=$(pwd);
+ cd $TEMP_ROOT_DIR;
++ROOT_DIR_RELATIVE=$DIR; 
+ 
+ 
+ ## check root dir for regex
+@@ -127,18 +146,18 @@
+ 
+ 
+ ## dirs and files loop
+-if [[ $DIR == *"/" ]]; then
+-	DIR="$DIR*";
+-else
+-	DIR="$DIR/*";
+-fi
+-SUBDIR="$DIR*/*";
+-for file in $DIR $SUBDIR; do
++#if [[ $DIR == *"/" ]]; then
++#	DIR="$DIR*";
++#else
++#	DIR="$DIR/*";
++#fi
++#SUBDIR="$DIR*/*";
++for file in $(find ${DIR}); do
+ 	#echo $file;
+ 	#echo $(basename "$file");
+ 	if [ -r "$file" ]; then
+-		if [ ! -d "$file" ]; then
+-			if [[ ! "$file" =~ $IGNOR ]] || [[ $IGNOR == "" ]]; then # check regex argument
++		if [[ ! "$file" =~ $IGNOR ]] || [[ $IGNOR == "" ]]; then # check regex argument
++			if [ ! -d "$file" ]; then
+ 				SIZE="$(($(wc -c < "$file")+0))";
+ 				if [ "$SIZE" -lt 100 ]; then
+ 					((++BB));
+@@ -160,58 +179,48 @@
+ 					((++GGiB));
+ 				fi			
+ 				((++FILE_COUNT));
+-			#else
+-				#echo "ignored file";
++			else
++				((++DIR_COUNT));
++				#echo "PATH IS DIR!";
+ 			fi
+-		else
+-			((++DIR_COUNT));
+-			#echo "PATH IS DIR!";
++		#else
++			#echo "ignored file or dir";
+ 		fi
+ 	else
+-		if [[ $file != "./**/*" ]]; then 
++		#if [[ $file != *"/**/*" ]]; then 
+ 			echo $file;
+ 			echo "NO PERMISSION";
+ 			EXIT_CODE=1;
+-		fi
++		#fi
+ 	fi
+ done
+ 
+ 
+-## normalize
+-if [[ $NORMALIZ == "n" ]]; then
+-	MAX_ROW=$BB;
+-	if [ $KiB -gt $MAX_ROW ]; then
+-		MAX_ROW=$KiB;
+-	fi
+-	if [ $KKiB -gt $MAX_ROW ]; then
+-		MAX_ROW=$KKiB;
+-	fi
+-	if [ $KKKiB -gt $MAX_ROW ]; then
+-		MAX_ROW=$KKKiB;
+-	fi
+-	if [ $MiB -gt $MAX_ROW ]; then
+-		MAX_ROW=$MiB;
+-	fi
+-	if [ $MMiB -gt $MAX_ROW ]; then
+-		MAX_ROW=$MMiB;
+-	fi
+-	if [ $MMMiB -gt $MAX_ROW ]; then
+-		MAX_ROW=$MMMiB;
+-	fi
+-	if [ $GiB -gt $MAX_ROW ]; then
+-		MAX_ROW=$GiB;
+-	fi
+-	if [ $GGiB -gt $MAX_ROW ]; then
+-		MAX_ROW=$GGiB;
+-	fi
+-	
+-	if [ $MAX_ROW -gt $MAX_ROW_SIZE ]; then
+-		#MAX_ROW_SIZE=$((MAX_ROW_SIZE-1)); # place for ONE_HASH_DIVISION mod rest hash
+-		ONE_HASH_DIVISION=$((MAX_ROW/MAX_ROW_SIZE));
+-		if [ $((MAX_ROW%MAX_ROW_SIZE)) -gt 0 ]; then
+-			ONE_HASH_DIVISION=$((ONE_HASH_DIVISION+1));
+-		fi
+-	fi
++## get the length of the longest row
++MAX_ROW=$BB;
++if [ $KiB -gt $MAX_ROW ]; then
++	MAX_ROW=$KiB;
++fi
++if [ $KKiB -gt $MAX_ROW ]; then
++	MAX_ROW=$KKiB;
++fi
++if [ $KKKiB -gt $MAX_ROW ]; then
++	MAX_ROW=$KKKiB;
++fi
++if [ $MiB -gt $MAX_ROW ]; then
++	MAX_ROW=$MiB;
++fi
++if [ $MMiB -gt $MAX_ROW ]; then
++	MAX_ROW=$MMiB;
++fi
++if [ $MMMiB -gt $MAX_ROW ]; then
++	MAX_ROW=$MMMiB;
++fi
++if [ $GiB -gt $MAX_ROW ]; then
++	MAX_ROW=$GiB;
++fi
++if [ $GGiB -gt $MAX_ROW ]; then
++	MAX_ROW=$GGiB;
+ fi
+ 
+ 
+@@ -219,47 +228,29 @@
+ if [[ $EXIT_CODE == 1 ]]; then
+ 	echo "-----------------------";
+ fi
+-echo "Root directory: $ROOT_DIR";
++echo "Root directory: $ROOT_DIR_RELATIVE";
+ echo "Directories: $DIR_COUNT";
+ echo "All files: $FILE_COUNT";
+ echo "File size histogram:";
+ if [ $ONE_HASH_DIVISION -gt 0 ]; then
+ 	printf "  <100 B  : ";
+-	TEMP_X=$(($BB/ONE_HASH_DIVISION));
+-	if [ $(($BB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+-	print_x_hashes $TEMP_X;
++	print_x_hashes $(get_line_length $BB $MAX_ROW_SIZE $MAX_ROW $NORMALIZ);
+ 	printf "  <1 KiB  : ";
+-	TEMP_X=$(($KiB/ONE_HASH_DIVISION));
+-	if [ $(($KiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+-	print_x_hashes $TEMP_X;
++	print_x_hashes $(get_line_length $KiB $MAX_ROW_SIZE $MAX_ROW $NORMALIZ);
+ 	printf "  <10 KiB : ";
+-	TEMP_X=$(($KKiB/ONE_HASH_DIVISION));
+-	if [ $(($KKiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+-	print_x_hashes $TEMP_X;
++	print_x_hashes $(get_line_length $KKiB $MAX_ROW_SIZE $MAX_ROW $NORMALIZ);
+ 	printf "  <100 KiB: ";
+-	TEMP_X=$(($KKKiB/ONE_HASH_DIVISION));
+-	if [ $(($KKKiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+-	print_x_hashes $TEMP_X;
++	print_x_hashes $(get_line_length $KKKiB $MAX_ROW_SIZE $MAX_ROW $NORMALIZ);
+ 	printf "  <1 MiB  : ";
+-	TEMP_X=$(($MiB/ONE_HASH_DIVISION));
+-	if [ $(($MiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+-	print_x_hashes $TEMP_X;
++	print_x_hashes $(get_line_length $MiB $MAX_ROW_SIZE $MAX_ROW $NORMALIZ);
+ 	printf "  <10 MiB : ";
+-	TEMP_X=$(($MMiB/ONE_HASH_DIVISION));
+-	if [ $(($MMiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+-	print_x_hashes $TEMP_X;
++	print_x_hashes $(get_line_length $MMiB $MAX_ROW_SIZE $MAX_ROW $NORMALIZ);
+ 	printf "  <100 MiB: ";
+-	TEMP_X=$(($MMMiB/ONE_HASH_DIVISION));
+-	if [ $(($MMMiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+-	print_x_hashes $TEMP_X;
++	print_x_hashes $(get_line_length $MMMiB $MAX_ROW_SIZE $MAX_ROW $NORMALIZ);
+ 	printf "  <1 GiB  : ";
+-	TEMP_X=$(($GiB/ONE_HASH_DIVISION));
+-	if [ $(($GiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+-	print_x_hashes $TEMP_X;
++	print_x_hashes $(get_line_length $GiB $MAX_ROW_SIZE $MAX_ROW $NORMALIZ);
+ 	printf "  >=1 GiB : ";
+-	TEMP_X=$(($GGiB/ONE_HASH_DIVISION));
+-	if [ $(($GGiB%ONE_HASH_DIVISION)) -gt 0 ]; then TEMP_X=$((TEMP_X+1)); fi
+-	print_x_hashes $TEMP_X;
++	print_x_hashes $(get_line_length $GGiB $MAX_ROW_SIZE $MAX_ROW $NORMALIZ);
+ else
+ 	echo "  <100 B  : ";
+ 	echo "  <1 KiB  : ";
+@@ -274,4 +265,4 @@
+ 
+ 
+ ## done
+-exit $EXIT_CODE;
+\ Chybí znak konce řádku na konci souboru
++exit $EXIT_CODE;

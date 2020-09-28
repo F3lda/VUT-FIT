@@ -1,0 +1,18 @@
+1	: JUDGE		: wants to enter
+2	: JUDGE		: enters		: 0	: 0	: 0
+3	: JUDGE		: starts confirmation		: 0	: 0	: 0
+4	: IMM 1		: starts
+5	: JUDGE		: ends confirmation		: 0	: 0	: 0
+6	: JUDGE		: leaves		: 0	: 0	: 0
+7	: JUDGE		: wants to enter
+8	: JUDGE		: enters		: 1	: 0	: 1
+9	: JUDGE		: waits for imm		: 1	: 0	: 1
+10	: IMM 1		: enters		: 1	: 0	: 1
+11	: IMM 1		: checks		: 1	: 1	: 1
+12	: JUDGE		: starts confirmation		: 1	: 1	: 1
+13	: JUDGE		: ends confirmation		: 0	: 0	: 1
+14	: IMM 1		: wants certificate		: 0	: 0	: 1
+15	: IMM 1		: got certificate		: 0	: 0	: 1
+16	: JUDGE		: leaves		: 0	: 0	: 1
+17	: JUDGE		: finishes
+18	: IMM 1		: leaves		: 0	: 0	: 0
