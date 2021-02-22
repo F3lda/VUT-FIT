@@ -1,0 +1,77 @@
+// možná oprava LL gramatiky, pokud nebude fungovat precedenční gramatika
+// EXPRESSION se zde chová jako terminál
+
+1. <program>        -> package id EOL <program>
+2. <program>        -> func id ( <param_in_first> ) <funkce_body> <program>
+3. <program>        -> EOL <program>
+4. <program>        -> EOF
+
+5. <param_in_first> -> id <type> <param_in_next>
+6. <param_in_first> -> ε
+7. <param_in_next>  -> , id <type> <param_in_next>
+8. <param_in_next>  -> ε
+
+9. <funkce_body>    -> { EOL <statements> }
+10. <funkce_body>   -> ( <type> <param_out_next> ) { EOL <statements> }
+
+11. <param_out_next>-> , <type> <param_out_next>
+12. <param_out_next>-> ε
+
+13. <type>          -> int
+14. <type>          -> float
+15. <type>          -> string
+
+
+
+16. <statements>    -> id <statement_id> EOL <statements>
+17. <statements>    -> return EXPRESSION <expr_next> EOL <statements>
+18. <statements>    -> if EXPRESSION { EOL <statements> } else { EOL <statements> } EOL <statements>
+19. <statements>    -> for <for_definition> ; EXPRESSION ; <for_assignment> { EOL <statements> } EOL <statements>
+20. <statements>    -> EOL <statements>
+21. <statements>    -> ε
+
+
+22. <statement_id>  -> ( <arg_first> )
+23. <statement_id>  -> := <id_expression>
+24. <statement_id>  -> = <id_expression>
+25. <statement_id>  -> , id <id_next>
+
+26. <id_next>       -> , id <id_next>
+27. <id_next>       -> = <ids_expression>
+
+
+28. <for_definition>-> id := <id_expression>
+29. <for_definition>-> ε
+
+30. <for_assignment>-> id <for_assign_id>
+31. <for_assignment>-> ε
+32. <for_assign_id> -> , id <for_assign_id>
+33. <for_assign_id> -> = <ids_expression>
+
+
+
+34. <id_expression> -> id ( <arg_first> )
+35. <id_expression> -> EXPRESSION
+
+36. <ids_expression>-> id ( <arg_first> )
+37. <ids_expression>-> EXPRESSION <expr_next>
+
+38. <expr_next>     -> , EXPRESSION <expr_next>
+39. <expr_next>     -> ε
+
+
+
+40. <arg_first>     -> INT <arg_next>
+41. <arg_first>     -> FLOAT <arg_next>
+42. <arg_first>     -> STRING <arg_next>
+43. <arg_first>     -> id <arg_next>
+44. <arg_first>     -> ε
+
+45. <arg_next>      -> , <arg> <arg_next>
+46. <arg_next>      -> ε
+
+
+47. <arg>           -> INT
+48. <arg>           -> FLOAT
+49. <arg>           -> STRING
+50. <arg>           -> id

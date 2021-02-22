@@ -1,0 +1,20 @@
+// Program 4: if
+package main
+
+func main() {
+    a := 0
+    err := 0
+    a, err = inputi()
+    print(a, "\n") 
+    if(a >= 5){
+        if(2 > 1){
+            print("IF1")
+        } else {
+            print("ELSE1")
+        }
+        print("IF0")
+    } else {
+        print("ELSE0")
+    }
+
+} 

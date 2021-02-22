@@ -1,0 +1,22 @@
+// priorita výrazů (expressionů)
+51. <expression>    -> ( <expression> )
+
+//aritmeticke operace
+52. <expression>    -> <expression> + <expression>
+53. <expression>    -> <expression> - <expression>
+54. <expression>    -> <expression> * <expression>
+55. <expression>    -> <expression> / <expression>
+
+// porovnávací operátory
+56. <expression>    -> <expression> == <expression>
+57. <expression>    -> <expression> != <expression>
+58. <expression>    -> <expression> > <expression>
+59. <expression>    -> <expression> < <expression>
+60. <expression>    -> <expression> >= <expression>
+61. <expression>    -> <expression> <= <expression>
+
+// hodnoty
+62. <expression>    -> INT
+63. <expression>    -> FLOAT
+64. <expression>    -> STRING
+65. <expression>    -> id

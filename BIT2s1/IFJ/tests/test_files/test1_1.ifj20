@@ -1,0 +1,15 @@
+// Program 4: Scitani jako funkce
+package main
+
+func add(a int, b int) (int, int) {
+    c := a + b
+    err := 0
+    return a, b
+}
+
+func main() {
+    a := 0
+    b := 0
+    a, b = ((5 + 6) - 1) + 7, (1 - (5 + 6)) + 7
+    print(a)
+}   

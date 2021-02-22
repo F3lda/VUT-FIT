@@ -1,0 +1,45 @@
+package main
+
+func main() {
+
+    // MUST PASS
+    //a = 0.0 							// ERR 2
+    //c = 5.4e12						// ERR 2
+    //d = 5e+4							// ERR 2
+    //e = 5.8074e-0						// ERR 2
+    //split_line := 4.5 * 				// ERR 3 // Odradkovani ve vyrazech stejne nebudou testovat
+    //             (1.0+0.8)
+    //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa := 5
+    //f := 5.6 + 6.8 					// OK
+    //g := 6 + 5 > 0 					// ERR 5 //
+    //h := 55 							// OK
+    //i := 5 + ( 5 + (5)) 				// OK
+    //j := (45) 						// OK
+    //k := "ahojky" 					// OK
+    //l := "ahoj" + " " + "kamarat" 	// OK
+    //m := ((5))						// OK
+    //n := (6 + (5 * 9) * 5) + 1      	// OK
+    //int64bit := 4223372036854775807	// OK
+	
+	// MUSTN'T PASS
+	//a = 								// ERR 7
+    //b = 5 + +							// ERR 3
+    //c = -6							// ERR 2 // LEGIT V UNARY EXPANSIONU
+    //d = c ++5							// ERR 99
+    //e = (-5)							// ERR 2 // LEGIT V UNARY EXPANSIONU
+    //f = 5 * 9 ( 5 + 4)				// ERR 2
+    //g = 5 0.6							// ERR 2
+    //h = 5 / 5 ( + 6)					// ERR 2
+    //i = (5 + ) 8						// ERR 2
+    //j := fn()							// ERR 3
+    //k := 9 + ahoj()					// ERR 2
+    //l := -40							// ERR 2
+    m := 36478 ** 2					// ERR 0 => NOT OK
+    //n = .0							// ERR 1
+    //o = 0.							// ERR 1
+    //p = .								// ERR 1
+    //q = -5							// ERR 2
+    //r = 5e							// ERR 1
+    //s = 5e+							// ERR 1
+    //t = 5e-						    // ERR 1
+}
