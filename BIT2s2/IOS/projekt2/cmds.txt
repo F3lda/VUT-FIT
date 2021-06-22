@@ -1,0 +1,32 @@
+zip -r proj2.zip *
+
+
+
+diff -ar odevzdani odevzdani-testpatch
+diff -ar odevzdani2 odevzdani-testpatch
+
+
+
+valgrind --leak-check=full --show-leak-kinds=all  --track-origins=yes  --verbose  ./proj2 5 4 100 100 
+valgrind  ./proj2 5 4 100 100 
+
+--log-file="valgr.txt" 
+
+
+
+diff -ur odevzdani odevzdani2  > proj2.c.patch
+
+diff -ur b a > ba.diff
+
+
+
+
+
+
+diff -u src/proj2.c.odevzdany src/proj2.c > proj2.c.patch
+diff -u src/libs/sharedmem_posix.c.odevzdany src/libs/sharedmem_posix.c > sharedmem_posix.c.patch
+
+
+patch -p0 < proj2.c.patch
+patch -p0 < sharedmem_posix.c.patch
+

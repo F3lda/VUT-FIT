@@ -1,0 +1,13 @@
+Projekt2
+
+./client 2001:67c:1220:8b0::93e5:b009 65001
+./client -h 2001:67c:1220:8b0::93e5:b009 -p 65001 < sftp_cmds.txt
+./client  -p 65001 -h 2001:67c:1220:8b0::93e5:b009 < sftp_cmds.txt
+./client  -p 65001 -h 127.0.0.1
+
+
+./server
+./server -u ./Makefile -i eth2 -p 65001
+
+tar -cvf xloginl00.tar ./projekt2/
+tar -cvf xloginl00.tar *

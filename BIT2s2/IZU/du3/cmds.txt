@@ -1,0 +1,13 @@
+
+CODE SOURCE: VUT Discord -> Monte (07. 04. 2021)
+
+
+cat id3-29.txt |  awk -F' ' 'BEGIN {k=0;printf("myarmy;enemyarmy;betrayal;enemybetrayal;expected;classes\n")}  { if($1=="}") k = 0;   if(k) printf("%s;%s;%s;%s;%s;%s\n",$3,$4,$5,$6,$7,$2); if($1=="objects") k=1;}' > out.csv
+
+
+https://planetcalc.com/8421/
+
+https://planetcalc.com/8443/ 
+
+
+https://www.youtube.com/watch?v=89mnBm76gq4

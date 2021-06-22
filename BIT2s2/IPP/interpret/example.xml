@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<program language="IPPcode21" description="" name="">
+  <instruction order="1" opcode="DEFVAR">
+    <arg1 type="var">GF@counter</arg1>
+  </instruction>
+  <instruction order="2" opcode="MOVE">
+    <arg1 type="var">GF@counter</arg1>
+    <arg2 type="string"/>
+  </instruction>
+  <instruction order="3" opcode="LABEL">
+    <arg1 type="label">while</arg1>
+  </instruction>
+  <instruction order="4" opcode="JUMPIFEQ">
+    <arg1 type="label">end</arg1>
+    <arg2 type="var">GF@counter</arg2>
+    <arg3 type="string">aaa</arg3>
+  </instruction>
+  <instruction order="5" opcode="WRITE">
+    <arg1 type="string">Proměnná\032GF@counter\032obsahuje\032</arg1>
+  </instruction>
+  <instruction order="6" opcode="WRITE">
+    <arg1 type="var">GF@counter</arg1>
+  </instruction>
+  <instruction order="7" opcode="WRITE">
+    <arg1 type="string">\010</arg1>
+  </instruction>
+  <instruction order="8" opcode="CONCAT">
+    <arg1 type="var">GF@counter</arg1>
+    <arg2 type="var">GF@counter</arg2>
+    <arg3 type="string">a</arg3>
+  </instruction>
+  <instruction order="9" opcode="JUMP">
+    <arg1 type="label">while</arg1>
+  </instruction>
+  <instruction order="10" opcode="LABEL">
+    <arg1 type="label">end</arg1>
+  </instruction>
+  <instruction order="11" opcode="CREATEFRAME" />
+    <instruction order="12" opcode="DEFVAR">
+    <arg1 type="var">TF@counter</arg1>
+  </instruction>
+   <instruction order="13" opcode="MOVE">
+    <arg1 type="var">TF@counter</arg1>
+    <arg2 type="string">AhojSvete</arg2>
+  </instruction>   <instruction order="16" opcode="STRLEN">
+    <arg1 type="var">TF@counter</arg1>
+    <arg2 type="string">řetězec\032s\032lomítkem\032\092\032a\010novým\035řádkem</arg2>
+  </instruction>
+     <instruction order="17" opcode="GETCHAR">
+    <arg1 type="var">TF@counter</arg1>
+    <arg2 type="string">dafgasdfhaf</arg2>
+    <arg3 type="int">10</arg3>
+  </instruction><instruction order="18" opcode="GETCHAR">
+    <arg1 type="var">TF@counter</arg1>
+    <arg2 type="string">řetězec\032s\032lomítkem\032\092\032a\010novým\035řádkem</arg2>
+    <arg3 type="int">8</arg3>
+  </instruction>
+  <instruction order="19" opcode="SETCHAR">
+    <arg1 type="var">TF@counter</arg1>
+    <arg2 type="int">0</arg2>
+    <arg3 type="string">X</arg3>
+  </instruction>  
+  <instruction order="20" opcode="TYPE">
+    <arg1 type="var">TF@counter</arg1>
+    <arg2 type="bool">true</arg2>
+  </instruction>
+  <instruction order="14" opcode="PUSHFRAME" />
+  <instruction order="15" opcode="POPFRAME" />
+    <instruction order="21" opcode="DPRINT">
+    <arg1 type="string">35</arg1>
+  </instruction>
+    <instruction order="22" opcode="OR">
+    <arg1 type="var">TF@counter</arg1>
+    <arg2 type="bool">false</arg2>
+    <arg3 type="bool">false</arg3>
+  </instruction>
+    <instruction order="23" opcode="NOT">
+    <arg1 type="var">TF@counter</arg1>
+    <arg2 type="bool">false</arg2>
+  </instruction>
+  
+</program>

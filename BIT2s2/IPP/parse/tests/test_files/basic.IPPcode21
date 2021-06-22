@@ -1,0 +1,18 @@
+
+
+.IPPcode21
+
+
+DEFVAR GF@counter
+MOVE GF@counter string@ #Inicializaceproměnnénaprázdnýřetězec
+#Jednoducháiterace,dokudnebudesplněnazadanápodmínka
+LABEL while
+JUMPIFEQ end GF@counter string@aaa
+
+WRITE string@Prom13ěnná\032GF@counter\032obsahuje\032
+WRITE GF@counter
+
+WRITE string@\010
+CONCAT GF@counter GF@counter string@a
+JUMP while
+LABEL end
