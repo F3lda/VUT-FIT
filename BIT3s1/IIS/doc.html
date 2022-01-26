@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <title>Projekt IIS</title>
+    <style type="text/css">
+    	table { border-collapse: collapse; }
+    	td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+    	dt { font-weight: bold; margin-top: 0.5em; }
+    </style>
+</head>
+<body>
+
+<!-- Zkontrolujte prosím nastavení kódování v hlavičce dokumentu 
+     podle použitého editoru -->
+
+<h1>4. Aukce: prodej a nákup zboží a majetku prostřednictvím dražby</h1> <!-- Nahradte názvem svého zadání -->
+
+
+<dl>
+	<dt>Autoři</dt>
+	<dd>Karel Jirgl
+	    <a href="mailto:xjirgl01@stud.fit.vutbr.cz">xjirgl01@stud.fit.vutbr.cz</a> -
+		backend (API), trochu frontend, databáze
+	</dd>
+	<dd>Thanh Quang Tran
+	    <a href="mailto:xtrant02@stud.fit.vutbr.cz">xtrant02@stud.fit.vutbr.cz</a> - 
+		frontend, databáze, trochu backend
+	</dd>
+  <dd>Tereza Buchníčková
+	    <a href="mailto:xbuchn00@stud.fit.vutbr.cz">xbuchn00@stud.fit.vutbr.cz</a> - 
+		databáze, frontend, trochu backend
+	</dd>
+	<dt>URL aplikace</dt>
+	<dd><a href="https://kajel.net/projects/IIS/">https://kajel.net/projects/IIS/</a></dd>
+</dl>
+
+
+<h2>Uživatelé systému pro testování</h2>
+<p>Uveďte prosím existující zástupce <strong>všech rolí uživatelů</strong>.</p>
+<table>
+<tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
+<tr><td>admin</td><td>admin</td><td>Administrátor</td></tr>
+<tr><td>licitator</td><td>licitator</td><td>Licitátor</td></tr>
+<tr><td>user</td><td>user</td><td>Registrovaný uživatel</td></tr>
+</table>
+
+
+<h2>Implementace</h2>
+<h4>Backend (API)</h4>
+<p>API je implementováno čistě v PHP.</p>
+<ul>
+	<li>/API/index.php - volání backendového API; zvolený příkaz se zadá jako hodnota URL parametru cmd (typu GET) (příklad volání: /API/?cmd=getAllAuctions), uživatelská data jsou v těle HTTP requestu ve formátu JSON</li>
+	<br />
+	<li>/API/DB/database.php - všechny funkce pro práci s MySQL databází</li>
+	<li>/API/auth/auth.php - funkce k autentizaci a autorizaci uživatele do systému -> rozšiřuje funkce ze souboru session.php</li>
+	<li>/API/auth/session.php - základní funkce pro práci s PHP SESSIONS</li>
+	<li>/API/users/users.php - funkce pro správu uživatelů</li>
+	<li>/API/auctions/auctions.php - funkce pro správu aukcí</li>
+</ul>
+
+<h4>Frontend</h4>
+	<p>Generování frontendu implementovaný částečně v PHP, vanilla Javascriptu, Jquery a Bootstrap.</p>
+	<p>Popis javascriptových souborů a na jakých stránkách jsou použity:</p>
+	<ul>
+		<li>/frontend/js/auctions.js &#8210; Hlavní stránka aukcí</li>
+		<li>/frontend/js/user_table.js &#8210; Stránka admina na zobrazení a editaci uživatelů</li>
+		<li>/frontend/js/auction_info.js &#8210; Stránka konkrétní aukce s různými komponenty pro manipulaci s aukcemi dle konkrétního uživatele</li>
+		<li>/frontend/js/create_auction.js &#8210; Stránka na tvorbu aukce</li>
+		<li>/frontend/js/auction_managed.js &#8210; Stránka na zobrazení aukcí organizovanou daným licitátorem</li>
+		<li>/frontend/js/auction_ready.js &#8210; Stránka se seznamem Aukcí ve stavu navržena (Aukce nezačala)</li>
+		<li>/frontend/js/profile.js &#8210; Profil aktuálně přihlášeného uživatele. Může editovat svůj profil</li>
+		<li>/frontend/js/user_attended.js &#8210; Stránka se seznamem zůčastněných aukcí uživatelem</li>
+		<li>/frontend/js/user_auctions.js &#8210; Stránka se seznamem aukcí vlastněných uživatelem</li>
+		<li>/frontend/js/login.js &#8210; Login stránka</li>
+		<li>/frontend/js/register.js &#8210; Registrační stránka, po registraci uživatele NEpřihlásí</li>
+		<li>/frontend/js/navbar.js &#8210; Generování navigačního panelu stránky</li>
+	</ul>
+
+
+<h3>Databáze</h3>
+<img src="graph.jpg">
+
+
+<h2>Instalace</h2>
+Stručně popište: 
+<ul>
+<li>postup instalace na server:
+    <ol>
+        <li>nahrát obsah adresáře src/ na webový server</li>
+        <li>v souboru API/DB/database.php upravit údaje o SQL databázi</li>
+        <li>spustit soubor sql/db_init.sql nad SQL databází</li>
+    </ol>
+</li>
+<li>softwarové požadavky: běželo na webserveru s PHP 7.3.9; MySQL (mysqlnd 5.0.12-dev); nginx/1.17.3</li>
+<li>defaultní správcovské údaje od systému: admin/admin</li>
+</ul>
+
+
+<h2>Známé problémy</h2>
+<p>Žádné vyznamné problémy se v projektu nevyskytují. Vše základní by mělo k aukci fungovat. Ještě bylo naplánováno implementovat řazení, vyhledání a filtr aukcí a uživatelů, ale kvůli nemalému množství chyb v průběhu implentace projektu nebylo dost času.<br />Může se ale stát, že při kliknutí na tlačítko pro vykonání určité akce nemusí dojít k žádné reakci. Chyba může být, že nedošlo k automatickému znovunačtení stránky nebo došlo k chybě, která není ošetřena (typ chyby lze dohledat v konzoli prohlížeče).</p>
+
+</body>
+</html>

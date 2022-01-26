@@ -1,0 +1,273 @@
+<!--
+* @file index.html [API] (FITeduler)
+* 
+* @brief JavaScriptové API pomocí iFrame
+* @date 2022-01-13 (YYYY-MM-DD)
+* @author Karel Jirgl
+* @update 2022-01-23 (YYYY-MM-DD)
+-->
+
+<!DOCTYPE html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="./../libs/iframecom.js"></script>
+<script src="./../libs/config.js"></script>
+<!--<script src="./data.js"></script>-->
+<script>
+serverIframe(global_iframe_origin, serverFunction);
+
+function serverFunction(data) {
+	var cmd = data[0];
+	var data = ((data[1] != undefined) ? data[1] : undefined); // JSON.parse(data[1])
+	var response = 'ERROR: unknown command!';
+	
+	
+	switch (cmd)
+	{
+		// PREPARE BACKEND
+		case "init":
+
+			// pageFrame
+			if (localStorage.getItem('frame') == null) {
+				localStorage.setItem('frame', "timetable");
+			}
+			// table = 5 * 14 * []
+			if (localStorage.getItem('table') == null) {
+				localStorage.setItem('table', JSON.stringify([Array(14).fill([]), Array(14).fill([]), Array(14).fill([]), Array(14).fill([]), Array(14).fill([])]));
+			}
+			// items = []
+			if (localStorage.getItem('items') == null) {
+				localStorage.setItem('items', JSON.stringify([]));
+			}
+
+			response = 'OK';
+			break;
+
+		case "changePageFrame":
+			var frame = JSON.parse(data);
+			
+			if (frame == null) {
+                frame = localStorage.getItem('frame');
+            } else {
+                localStorage.setItem('frame', frame);
+            }
+
+			response = frame;
+			break;
+
+		case "loadTimetable":
+			response = [JSON.parse(localStorage.getItem('table')), JSON.parse(localStorage.getItem('items'))];
+			break;
+
+		case "timetableAddLesson":
+			var lesson = JSON.parse(data);
+
+			if (lesson.from > lesson.to) {
+                return;
+            }
+
+            // get data from DB
+            var table = JSON.parse(localStorage.getItem('table'));
+            var items = JSON.parse(localStorage.getItem('items'));
+            
+
+            // add new item
+            var newItemId = items.length;
+            items.push(lesson);
+            
+
+            // add lesson to table[day][hour][row]
+            var newItemRow = 0-1; // přidá hodinu co nejníže -> //var newItemRow = table[lesson.day][lesson.from].length-1;
+
+            do {
+                // find empty place
+                newItemRow++;
+                var rowEmpty = true;
+                for (var i = lesson.from; i <= lesson.to; i++) {
+                    if (table[lesson.day][i][newItemRow] != null) {
+                        rowEmpty = false;
+                        break;
+                    }
+                }
+            } while(rowEmpty == false);
+
+            for (var i = lesson.from; i <= lesson.to; i++) {
+                // add new item to empty row
+                table[lesson.day][i][newItemRow] = newItemId;
+            }
+            
+
+            // save data to DB
+            localStorage.setItem('table', JSON.stringify(table));
+            localStorage.setItem('items', JSON.stringify(items));
+
+			response = 'OK';
+			break;
+
+		case "timetableClear":
+			// table = 5 * 14 * []
+			localStorage.setItem('table', JSON.stringify([Array(14).fill([]), Array(14).fill([]), Array(14).fill([]), Array(14).fill([]), Array(14).fill([])]));
+            // items = []
+            localStorage.setItem('items', JSON.stringify([]));
+			
+			response = 'OK';
+			break;
+
+		case "timetableGetItemAttribute":
+			var dataO = JSON.parse(data);
+			var item = dataO[0];
+			var attribute = dataO[1];
+			var ifnull = dataO[2];
+
+			if (JSON.parse(localStorage.getItem('items'))[item] == null) {
+                return null;
+            }
+            if (JSON.parse(localStorage.getItem('items'))[item][attribute] == null) {
+                return ifnull;
+            }
+			
+			response = JSON.stringify(JSON.parse(localStorage.getItem('items'))[item][attribute]);
+			break;
+
+		case "timetableChangeItemAttribute":
+			var dataO = JSON.parse(data);
+			var item = dataO[0];
+			var attribute = dataO[1];
+			var value = dataO[2];
+
+			var items = JSON.parse(localStorage.getItem('items'));
+            items[item][attribute] = value;
+            localStorage.setItem('items', JSON.stringify(items));
+			
+			response = 'OK';
+			break;
+
+		case "timetableGetItemInfo":
+			var item = JSON.parse(data);
+
+			// replaced with PHP API
+			/*var json = jsonData;
+
+			json = JSON.parse(json);
+
+			var lessonInfo = {};
+			if (JSON.parse(localStorage.getItem('items'))[item]["subject_id"] != -1) {
+				lessonInfo = json[JSON.parse(localStorage.getItem('items'))[item]["subject_id"]];
+			}*/
+
+			response = JSON.stringify(JSON.parse(localStorage.getItem('items'))[item]);
+			break;
+
+		// replaced with PHP API
+		/*case "optionsLoadSubjects":
+			var dataO = JSON.parse(data);
+			var study = dataO[0];
+			var semester = dataO[1];
+			var year = dataO[2];
+
+			var json = jsonData;
+
+			var compulsory_subjects = [];
+			var optional_subjects = [];
+
+			json = JSON.parse(json);
+			$(json).each(function(index, element) {
+				if (element["study"] == study && Number(element["semester"]) == Number(semester) && Number(element["year"]) == Number(year)) {
+					if (Number(element["compulsory"]) == 1) {
+						if (compulsory_subjects.indexOf(element["nickname"]) == -1) {
+							compulsory_subjects.push(element["nickname"]);
+						}
+					} else {
+						if (optional_subjects.indexOf(element["nickname"]) == -1) {
+							optional_subjects.push(element["nickname"]);
+						}
+					}
+				}
+			});
+			
+			response = [compulsory_subjects, optional_subjects];
+			break;*/
+		
+		// replaced with PHP API
+		/*case "optionsCreateTimetable":
+			var dataO = JSON.parse(data);
+			var compulsory_subjects = dataO[0];
+			var optional_subjects = dataO[1];
+
+			var json = jsonData;
+
+            json = JSON.parse(json);
+            $(json).each(function(index, element) {
+                if (compulsory_subjects.indexOf(element["nickname"]) != -1 || optional_subjects.indexOf(element["nickname"]) != -1) {
+                    var colors = {"přednáška": 1, "cvičení": 2};
+                    
+                    var lesson = new Object();
+                    lesson.fullname = element["name"];
+                    lesson.day = Number(element["day"]);
+                    lesson.from = Number(element["from_time"]);
+                    lesson.to = Number(element["to_time"]);
+                    lesson.week = element["week"];
+                    lesson.color = 0;
+                    if (colors[element["type"]] !== undefined) {lesson.color = colors[element["type"]];}
+                    lesson.name = element["nickname"];
+                    lesson.room = element["room"];
+                    //lesson.description = element["name"]+'<br /><a href='+element["link"]+'>Karta předmětu</a>';
+                    lesson.description = '';
+                    lesson.type = element["type"];
+                    lesson.status = "displayed"; // displayed, hidden, removed, starred
+                    lesson.selected = false; // false, true
+                    lesson.subject_id = index;
+
+                    serverFunction(["timetableAddLesson", JSON.stringify(lesson)]);
+                }
+            });
+
+			response = 'OK';
+			break;*/
+
+		case "timetableClearTrash":
+			// get data from DB
+            var table = JSON.parse(localStorage.getItem('table'));
+            var items = JSON.parse(localStorage.getItem('items'));
+
+            $(items).each(function(index, element) {
+                if (element != null && element.status == "removed") {
+                    
+                    // remove lesson from timetable
+                    // day
+                    for (var i = 0; i < 5; i++) {
+                        
+                        // hour
+                        for (var j = 0; j < 14; j++) {
+                            
+                            // row
+                            for (var k = 0; k < table[i][j].length; k++) {
+
+                                if (table[i][j][k] == index) {
+                                    table[i][j].splice(k, 1, null);
+                                    k--;
+                                }
+
+                            }
+                        }
+                    }
+
+                    // remove lesson from items
+                    items[index] = -1;
+                }
+            });
+
+            // save data to DB
+            localStorage.setItem('table', JSON.stringify(table));
+            localStorage.setItem('items', JSON.stringify(items));
+
+			response = 'OK';
+			break;
+
+		default: 
+			response = 'ERROR: unknown command!';
+	}
+	
+	
+	return ((typeof response === 'string') ? response : JSON.stringify(response));
+}
+</script>

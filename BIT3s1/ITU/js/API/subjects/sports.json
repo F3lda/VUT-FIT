@@ -1,0 +1,173 @@
+{ 
+    "sports" : [
+        {
+            "name": "Badminton",
+            "day": "Pondělí",
+            "time": "14:00 - 14:50",
+            "from_time": "7",
+            "to_time": "8",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245034"
+        },
+        {
+            "name": "Basketbal",
+            "day": "Úterý",
+            "time": "10:00 - 10:50",
+            "from_time": "3",
+            "to_time": "4",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245035"
+        },
+        {
+            "name": "Basketbal",
+            "day": "Středa",
+            "time": "16:00 - 16:50",
+            "from_time": "9",
+            "to_time": "10",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245035"
+        },
+        {
+            "name": "Florbal",
+            "day": "Pátek",
+            "time": "10:00 - 10:50",
+            "from_time": "3",
+            "to_time": "4",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245174"
+        },
+        {
+            "name": "Házená",
+            "day": "Úterý",
+            "time": "14:00 - 14:50",
+            "from_time": "7",
+            "to_time": "8",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245113"
+        },
+        {
+            "name": "Házená",
+            "day": "Pondělí",
+            "time": "15:00 - 15:50",
+            "from_time": "8",
+            "to_time": "9",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245113"
+        },
+        {
+            "name": "Karate",
+            "day": "Středa",
+            "time": "9:00 - 9:50",
+            "from_time": "2",
+            "to_time": "3",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245111"
+        },
+        {
+            "name": "Kondiční trénink",
+            "day": "Úterý",
+            "time": "7:00 - 7:50",
+            "from_time": "0",
+            "to_time": "1",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245099"
+        },
+        {
+            "name": "Kondiční trénink",
+            "day": "Pondělí",
+            "time": "8:00 - 8:50",
+            "from_time": "1",
+            "to_time": "2",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245099"
+        },
+        {
+            "name": "Plážový volejbal",
+            "day": "Pátek",
+            "time": "15:00 - 15:50",
+            "from_time": "8",
+            "to_time": "9",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245170"
+        },
+        {
+            "name": "Plavání",
+            "day": "Středa",
+            "time": "16:00 - 16:50",
+            "from_time": "9",
+            "to_time": "10",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245062"
+        },
+        {
+            "name": "Softbal",
+            "day": "Pondělí",
+            "time": "8:00 - 8:50",
+            "from_time": "1",
+            "to_time": "2",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245067"
+        },
+        {
+            "name": "Softbal",
+            "day": "Středa",
+            "time": "9:00 - 9:50",
+            "from_time": "2",
+            "to_time": "3",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245067"
+        },
+        {
+            "name": "Stolní tenis",
+            "day": "Úterý",
+            "time": "10:00 - 10:50",
+            "from_time": "3",
+            "to_time": "4",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245068"
+        },
+        {
+            "name": "Tanec",
+            "day": "Pondělí",
+            "time": "10:00 - 10:50",
+            "from_time": "3",
+            "to_time": "4",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245022"
+        },
+        {
+            "name": "Tabata",
+            "day": "Pátek",
+            "time": "12:00 - 12:50",
+            "from_time": "5",
+            "to_time": "6",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245165"
+        },
+        {
+            "name": "Tabata",
+            "day": "Čtvrtek",
+            "time": "8:00 - 8:50",
+            "from_time": "1",
+            "to_time": "2",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245165"
+        },
+        {
+            "name": "Tenis",
+            "day": "Úterý",
+            "time": "10:00 - 10:50",
+            "from_time": "3",
+            "to_time": "4",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245070"
+        },
+        {
+            "name": "Volejbal",
+            "day": "Pátek",
+            "time": "14:00 - 14:50",
+            "from_time": "7",
+            "to_time": "8",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245075"
+        },
+        {
+            "name": "Volejbal",
+            "day": "Pondělí",
+            "time": "13:00 - 13:50",
+            "from_time": "6",
+            "to_time": "7",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245075"
+        },
+        {
+            "name": "Zumba",
+            "day": "Pátek",
+            "time": "12:00 - 12:50",
+            "from_time": "5",
+            "to_time": "6",
+            "link": "https://www.cesa.vutbr.cz/studenti/predmety/detail/245095"
+        }
+        
+    ]
+}

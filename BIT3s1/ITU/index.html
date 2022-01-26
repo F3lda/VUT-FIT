@@ -1,0 +1,452 @@
+<!--
+ * @file index.html (FITeduler)
+ * 
+ * @brief Kořenový soubor webové aplikace
+ * @date 2021-11-16 (YYYY-MM-DD)
+ * @author Tereza Buchníčková (cca 50 %), Tran Thanh Quang M. (cca 50 %), Karel Jirgl
+ * @update 2022-01-23 (YYYY-MM-DD)
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+	<title>FITeduler</title>
+
+	<link rel="stylesheet" href="./css/styles.css">
+    <!-- BOOTSTRAP 4 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+    <!-- image and jspdf downloader-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js" integrity="sha512-tVYBzEItJit9HXaWTPo8vveXlkK62LbA+wez9IgzjTmFNLMBO1BEYladBw2wnM3YURZSMUyhayPCoLtjGh84NQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- FONT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+
+    <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+
+
+
+    <script type="text/javascript" src="./js/libs/iframecom.js"></script>
+    <script type="text/javascript" src="./js/libs/config.js"></script>
+    <script type="text/javascript" src="./js/callbacks.js"></script>
+    <script type="text/javascript" src="./js/functions.js"></script>
+    <script type="text/javascript" src="./js/view.js"></script>
+</head>
+
+<body>
+
+
+
+<!-- ****************************** --- NAVBAR --- ****************************** -->
+<nav class="navbar navbar-expand-sm navbar-light" style="box-shadow: 0px 2px 5px grey;">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="./"><img src="./imgs/logo.png" alt="FITeduler" style="box-shadow: 0px 1px 1px grey;"></a>
+    </div>
+    <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="#timetable">Pracovní rozvrh</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#result">Výsledný rozvrh</a>
+        </li>
+		<li class="nav-item">
+          <a class="nav-link" href="#options">Možnosti předmětů</a>
+        </li>
+        <!-- Terka sporty - start -->
+        <li class="nav-item">
+            <a class="nav-link" href="#sports">Sporty</a>
+        </li>
+        <!-- Terka sporty - end -->
+        <li class="nav-item">
+          <a class="nav-link" href="#info"><i class="fas fa-info-circle"></i></a>
+        </li>
+    </ul>
+</nav>
+
+
+
+<!-- ****************************** --- TIMETABLE --- ****************************** -->
+<div id="frame_timetable" class="page_frame ml-2 mr-2 pt-3"> 
+	  
+	<div class="row pt-2 m-0 pr-3">
+        <div class="col-10">
+            <!--TLACITKA NAD TABULKOU-->
+            <div class="container-fluid">
+                <button disabled type="button" id="show" title="Zobrazit označené" class="text-white mass_event btn dark-sky"><i class="fas fa-eye"></i></button>
+                -
+                <button disabled type="button" id="hide" title="Skrýt označené" class="text-white mass_event btn dark-sky"><i class="fas fa-eye-slash"></i></button>
+                <button disabled type="button" id="star" title="Přidat označené do výsledného rozvrhu" class="text-white mass_event btn dark-sky"><i class="fas fa-star"></i></button>
+                <input disabled type="color" id="html5colorpicker" title="Změnit barvu" onchange="" value="#029fa3" class="mass_event" style="width: 38px; height: 38px; position: relative; top: 10px;">
+                -
+                <button disabled type="button" id="trash" title="Smazat označené" class="text-white mass_event btn dark-sky"><i class="fas fa-eraser"></i></button>
+
+                <span class="float-right" style="position: relative; top: 9px;">
+                    <!--<button type="button" id="clear_trash" title="Vysypat koš" class="text-white btn dark-sky"><i class="fa fa-trash"></i></button>-->
+                    <button type="button" id="clear" title="Vyčistit rozvrh" class="text-white btn btn-danger"><i class="fas fa-times"></i></button>
+                </span>
+            </div>
+            
+            <div class="table-responsive pt-2">
+                <table id="timetable" class="table table-sm text-center" style="border: 2px solid black; table-layout: fixed; border-collapse: separate; box-shadow: 3px 2px 3px grey; min-width: 1000px;">
+                    <thead>
+                        <tr class="thead-dark">
+                            <th class="text-uppercase"></th>
+                            <th class="text-uppercase">7:00<br>7:50</th>
+                            <th class="text-uppercase">8:00<br>8:50</th>
+                            <th class="text-uppercase">9:00<br>9:50</th>
+                            <th class="text-uppercase">10:00<br>10:50</th>
+                            <th class="text-uppercase">11:00<br>11:50</th>
+                            <th class="text-uppercase">12:00<br>12:50</th>
+                            <th class="text-uppercase">13:00<br>13:50</th>
+                            <th class="text-uppercase">14:00<br>14:50</th>
+                            <th class="text-uppercase">15:00<br>15:50</th>
+                            <th class="text-uppercase">16:00<br>16:50</th>
+                            <th class="text-uppercase">17:00<br>17:50</th>
+                            <th class="text-uppercase">18:00<br>18:50</th>
+                            <th class="text-uppercase">19:00<br>19:50</th>
+                            <th class="text-uppercase">20:00<br>20:50</th>
+                        </tr>
+                    </thead>
+        
+                    <tbody>
+        <!--Pondeli-->
+                        <tr id="rowMonday">
+                            <td class="align-middle" rowspan="1">Pondělí</td>
+                        </tr>
+        <!--Utery-->
+                        <tr id="rowThuesday">
+                            <td class="align-middle" rowspan="1">Úterý </td>
+                        </tr>
+        <!-- Streda -->
+                        <tr id="rowWednesday">
+                            <td class="align-middle" rowspan="1">Středa</td>
+                        </tr>
+        <!--Ctvrtek-->
+                        <tr id="rowThursday">
+                            <td class="align-middle" rowspan="1">Čtvrtek</td>
+                        </tr>
+        <!--Patek-->
+                        <tr id="rowFriday">
+                            <td class="align-middle" rowspan="1">Pátek</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="menu">
+                <!--<button class="btn" id="button_change_sky"><div class="bg-sky border border-dark" style="display: block; width: 15px; height: 15px;float: right;position: relative;"></div></button>
+                <button class="btn" id="button_change_orange"><div class="bg-orange border border-dark" style="display: block; width: 15px; height: 15px;float: right;position: relative;"></div></button>
+                <button class="btn" id="button_change_yellow"><div class="bg-warning border border-dark" style="display: block; width: 15px; height: 15px;float: right;position: relative;"></div></button>
+                -->
+
+                <button id="show_dd" class="btn" title="Zobrazit aktuální"><i class="fas fa-eye"></i></button>
+                -
+                <button id="hide_dd" class="btn" title="Skrýt aktuální"><i class="fas fa-eye-slash"></i></button>
+                <button id="star_dd" class="btn" title="Přidat aktuální do výsledného rozvrhu"><i class="fas fa-star"></i></button>
+                <input type="color" id="html5colorpicker_dropdown" title="Změnit barvu" onchange="" value="#029fa3" class="" style="width: 38px; height: 38px; position: relative; top: 9px;">
+                -
+                <button id="trash_dd" class="btn"><i class="fa fa-trash"></i></button>
+                <!--a class="dropdown-item" href="#">Change Description</a>
+                <a class="dropdown-item" href="#">Change Name</a>
+                <a class="dropdown-item" href="#">Change Room</a>-->
+            </div>
+            <!--Popisky-->
+            <div class="container-fluid">
+                <div class="float-left mr-4">Přednáška <div class="bg-sky" style="display: block; width: 15px; height: 15px;float: right;position: relative;top: 5px;left: 5px;"></div></div>
+                <div class="float-left mr-4">Cvičení <div class="bg-orange" style="display: block; width: 15px; height: 15px;float: right;position: relative;top: 5px;left: 5px;"></div></div>
+                <div class="float-left">Ostatní <div class="bg-warning" style="display: block; width: 15px; height: 15px;float: right;position: relative;top: 5px;left: 5px;"></div></div>
+            </div>
+        </div>
+
+        <div class="col-2"><!--style="min-width: 270px;"-->
+            <!--TLACITKA NAD PRAVYM TABEM-->
+            <div class="row">
+                <div class="container-fluid">
+                    <button type="button" id="create_lesson" title="Zobrazit/skrýt formulář pro přidání vlastní hodiny" class="text-white btn dark-sky float-left">Přidat vlastní hodinu <i class="fas fa-plus"></i></button>
+                    <button type="button" id="clear_trash" title="Vysypat koš" class="text-white btn dark-sky float-right"><i class="fa fa-trash"></i></button>
+                </div>
+            </div>
+            <div class="row pt-2">
+                <div class="jumbotron jumbotron-fluid mt-0 mb-3 p-3" style="background:transparent !important; width: 100%;">
+
+                    <div id="form_add" style="width: 100%; border-radius: 5px; background: #eee; padding: 10px;">
+                        <div class="div1_form">
+                            <label>Den:</label>
+                            <select>
+                                <option value="0">Po</option>
+                                <option value="1">Út</option>
+                                <option value="2">St</option>
+                                <option value="3">Čt</option>
+                                <option value="4">Pá</option>
+                            </select> 
+                        </div>
+                        <div class="div2_form">
+                            <label>Od:</label>
+                            <select>
+                                <option value="0">07:00</option>
+                                <option value="1">08:00</option>
+                                <option value="2">09:00</option>
+                                <option value="3">10:00</option>
+                                <option value="4">11:00</option>
+                                <option value="5">12:00</option>
+                                <option value="6">13:00</option>
+                                <option value="7">14:00</option>
+                                <option value="8">15:00</option>
+                                <option value="9">16:00</option>
+                                <option value="10">17:00</option>
+                                <option value="11">18:00</option>
+                                <option value="12">19:00</option>
+                                <option value="13">20:00</option>
+                            </select>
+                        </div>
+                        <div class="div3_form">
+                            <label>Do:</label>
+                            <select>
+                                <option value="0">07:50</option>
+                                <option value="1">08:50</option>
+                                <option value="2">09:50</option>
+                                <option value="3">10:50</option>
+                                <option value="4">11:50</option>
+                                <option value="5">12:50</option>
+                                <option value="6">13:50</option>
+                                <option value="7">14:50</option>
+                                <option value="8">15:50</option>
+                                <option value="9">16:50</option>
+                                <option value="10">17:50</option>
+                                <option value="11">18:50</option>
+                                <option value="12">19:50</option>
+                                <option value="13">20:50</option>
+                            </select>
+                        </div>
+                        <div class="div4_form"><label>Název:</label></div>
+                        <div class="div9_form"><input class="w-100" type="text" id="nazev" required="required"></div>
+                        <div class="div5_form"><label>Místnost:</label></div>
+                        <div class="div10_form"><input class="w-100" type="text" id="mistnost"></div>
+                        <div class="div6_form"> 
+                            <label>Týdny:</label>
+                            <select>
+                                <option value="both">oba</option>
+                                <option value="even">sudý</option>
+                                <option value="odd">lichý</option>
+                            </select> 
+                        </div>
+                        <div class="div11_form"> 
+                            <select class="selectpicker w-100 p-10" title="Nic nevybráno" multiple>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">12</option>
+                                <option value="13">13</option>
+                            </select>
+                        </div>
+                        <div class="div12_form"><input type="text"  placeholder="Vlastní popis" style="width: 100%;"></div> 
+                        <div class="div7_form">
+                            <label>Barva:</label>
+                            <select>
+                                <option value="0">žlutá</option>
+                                <option value="1">modrá</option>
+                                <option value="2">oranžová</option>
+                            </select>
+                        </div>
+                        <div class="div8_form"><button id="addLesson" class="btn text-white dark-sky" type="button">Přidat</button></div> 
+                    </div>
+                    
+                    <div class="tab_panels">
+                        <ul class="tabs">
+                            <li rel="panel1" id="panel_lesson" class="active">Hodina</li>
+                            <li rel="panel2" id="panel_subject">Předmět</li>
+                            <li rel="panel3">Koš</li>
+                        </ul>
+            
+                        <div id="panel1" class="panel active" style="border-radius: 0 10px 10px 10px;">
+                            Kliknutím pravým tlačítkem na určitou hodinu v rozvrhu se zde zobrazí informace.
+                        </div>
+                        <div id="panel2" class="panel" style="border-radius: 0 10px 10px 10px;">
+                            Kliknutím pravým tlačítkem na určitou hodinu v rozvrhu se zde zobrazí informace.
+                        </div>
+                        <div id="panel3" class="panel" style="border-radius: 0 10px 10px 10px;">
+                            
+                        </div>
+                    </div> 
+
+                </div> <!--Konec Jumbotronu-->
+            </div>
+	    </div>
+	</div> <!--Konec row-->
+	
+
+
+
+</div>
+
+
+
+<!-- ****************************** --- RESULT --- ****************************** -->
+<div id="frame_result" style="display: none; padding-left: 5%; padding-right: 5%;" class="page_frame table-responsive pt-4">
+    <table id="timetable_result" class="table table-sm text-center " style="border: 2px solid black;min-width: 1000px;">
+        <thead>
+            <tr class="thead-dark">
+                <th class="text-uppercase"></th>
+                <th class="text-uppercase">7:00<br>7:50</th>
+                <th class="text-uppercase">8:00<br>8:50</th>
+                <th class="text-uppercase">9:00<br>9:50</th>
+                <th class="text-uppercase">10:00<br>10:50</th>
+                <th class="text-uppercase">11:00<br>11:50</th>
+                <th class="text-uppercase">12:00<br>12:50</th>
+                <th class="text-uppercase">13:00<br>13:50</th>
+                <th class="text-uppercase">14:00<br>14:50</th>
+                <th class="text-uppercase">15:00<br>15:50</th>
+                <th class="text-uppercase">16:00<br>16:50</th>
+                <th class="text-uppercase">17:00<br>17:50</th>
+                <th class="text-uppercase">18:00<br>18:50</th>
+                <th class="text-uppercase">19:00<br>19:50</th>
+                <th class="text-uppercase">20:00<br>20:50</th>
+            </tr>
+        </thead>
+
+        <tbody>
+<!--Pondeli-->
+            <tr id="rowMonday_result">
+                <td class="align-middle" rowspan="1">Pondělí</td>
+            </tr>
+<!--Utery-->
+            <tr id="rowThuesday_result">
+                <td class="align-middle" rowspan="1">Úterý </td>
+            </tr>
+<!-- Streda -->
+            <tr id="rowWednesday_result">
+                <td class="align-middle" rowspan="1">Středa</td>
+            </tr>
+<!--Ctvrtek-->
+            <tr id="rowThursday_result">
+                <td class="align-middle" rowspan="1">Čtvrtek</td>
+            </tr>
+<!--Patek-->
+            <tr id="rowFriday_result">
+                <td class="align-middle" rowspan="1">Pátek</td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="button" id="save_as_image" class="text-white btn dark-sky">Uložit jako obrázek</button>
+    <!--<button disabled type="button" id="save_as_pdf" class="text-white btn dark-sky">Uložit jako PDF</button>-->
+</div>
+
+
+<!-- ****************************** --- OPTIONS --- ****************************** -->
+<div id="frame_options" style="display: none;" class="page_frame jumbotron">
+    <div class="parent options">
+        <div class="div1">Studium:<br/></div>
+        <div class="div2"><button id = "bit" type="button" class="studium btn text-white dark-sky">BIT</i></button></div>
+        <div class="div3">
+            <select id = "mit" class="studium form-control .font-size14" name="mit">
+                <option value="default" selected="selected">MIT </option>
+                <option value="mit-nbio">MIT-NBIO</option>
+                <option value="mit-nisd">MIT-NISD</option>
+                <option value="mit-nisy">MIT-NISY</option>
+            </select>
+        </div>
+        <div class="div4">Semestr:<br/></div>
+        <div class="div5"><button id = "z_s" type="button" class="btn_semestr btn text-white dark-sky">Zimní</i></button></div>
+        <div class="div6"><button id = "l_s" type="button" class="btn_semestr btn text-white dark-sky">Letní</i></button></div>
+        <div class="div7"><label for="r">Ročník:</label></div>
+        <div class="div8">
+            <select class="form-control w-auto" name="r" id="r">
+                <option value="0">1.</option>
+                <option value="1">2.</option>
+                <option id="year3" value="2">3.</option>
+            </select>
+        </div>
+        <div class="div9"><label for="p-p">Povinné předměty:</label></div>
+        <div class="div10">
+            <select class="selectpicker pb-2" name="p-p" id="p-p" title="Nic nevybráno" multiple>
+              </select>
+        </div>
+        <div class="div11"><label for="v-p">Volitelné předměty:</label></div>
+        <div class="div12">
+            <select class="selectpicker" name="v-p" id="v-p" title="Nic nevybráno" multiple>
+            </select>
+        </div>
+        <div class="div13"><button type="button" id="create" class="btn text-white bg-sky mt-4">VYTVOŘIT ROZVRH</i></button></div>
+        </div>
+
+</div>
+
+
+
+<!-- Terka - start -->
+<!-- ****************************** --- SPORTS --- ****************************** -->
+<div id="frame_sports" style="display: none;" class="page_frame jumbotron">
+    <div id="sports">
+        <h1 id="hSports">Nabídka sportů</h1>
+        <button id="showAll" type="button" class="btn btn-primary btn-sm showAll mb-2">Zobrazit vše</button>
+        <input type="text" id="myInput" placeholder="Hledat sport..">
+        <div id="navSports">
+            <table id="myTable">
+                <tbody>
+                <tr>
+                <td id="sportName">Název</td>
+                <td id="sportAction"></td>
+                <td id="sportDay">Den</td>
+                <td id="sportTime">Čas</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <ul id="myUL">
+        </ul>
+    </div>
+</div>
+<!-- Terka - end -->
+
+
+
+<!-- ****************************** --- INFO --- ****************************** -->
+<div id="frame_info" style="display: none;" class="page_frame jumbotron">
+    <h3>Informace o aplikaci</h3>
+    <p>
+		<ul>
+			<li>Po kliknutí na záložku Možnosti předmětů si můžete vybrat předměty, které chcete zobrazit v pracovním rozvrhu. </li>
+			<li>Kliknutím na jeden nebo více hodin v rozvrhu, se dané hodiny označí.</li>
+			<ol>
+				<li>Po kliknutí na tlačítko s přeškrtnutým okem, označené předměty zesvětlají.</li>
+				<li>Po kliknutí na hvězdičku, se hodina zvýrazní a zobrazí se ve výsledném rozvrhu.</li>
+				<li>Po kliknutí na oko se vybrané hodiny vrátí do původního stavu.</li>
+				<li>Tlačítkem s barvou je možné měnit pozadí vybraných hodin.</li>
+				<li>Kliknutím na gumu se hodina přesune do koše.</li>
+			</ol>
+			<li>Tyto akce lze provést i pouze u jedné hodiny, a to po kliknutí na ni pravým tlačítkem myši.</li>
+			<li>Po dvojkliku na předmět se v pravé části objeví informace o konkrétní hodině a o celém předmětu.</li>
+			<li>V záložce koš najdete vymazané hodiny, které můžete vrátit zpět do rozvrhu.</li>
+			<li>V pravé části se nachází tlačítko pro přidání vlastní hodiny.</li>
+			<li>Tlačítkem s košem vyprázdníte položky koše. Po kliknutí na křížek nad rozvrhem, smažete celý rozvrh.</li>
+		</ul>
+        <br />
+        <img src="./imgs/logo_big.png" />
+	</p>
+</div>
+
+
+
+</body>
+
+</html>
