@@ -1,0 +1,83 @@
+Train set = examples [3, 11]
+-------------------------
+| [oblacnost]
+|    |oblacnost  = 0.631|
+|    |srazky     = 0.157|
+|    |teplota    = 0.379|
+|    |vhkost     = 0.229|
+| => polojasno ['9']
+|    | {'Q'}
+| => oblacno ['4', '7', '11', '12']
+|    | [vhkost]
+|    |    |srazky     = 0.311|
+|    |    |teplota    = 0.311|
+|    |    |vhkost     = 1.000|
+|    | => mala ['7', '12']
+|    |    | {'S'}
+|    | => velka ['4', '11']
+|    |    | {'R'}
+| => zatazeno ['5', '6', '8', '10']
+|    | [srazky]
+|    |    |srazky     = 0.311|
+|    |    |teplota    = 0.311|
+|    |    |vhkost     = 0.311|
+|    | => slabe ['6', '8']
+|    |    | [vhkost]
+|    |    |    |teplota    = 0.000|
+|    |    |    |vhkost     = 1.000|
+|    |    | => mala ['6']
+|    |    |    | {'R'}
+|    |    | => velka ['8']
+|    |    |    | {'Q'}
+|    | => vydatne ['5', '10']
+|    |    | {'R'}
+-------------------------
+Test set = examples [0, 2]
+0: ['1', 'S', 'zatazeno', 'slabe', 'stredni', 'mala']  =>  {'R'} FAIL
+
+1: ['2', 'R', 'zatazeno', 'vydatne', 'nizka', 'mala']  =>  {'R'} OK
+
+2: ['3', 'S', 'oblacno', 'vydatne', 'nizka', 'mala']  =>  {'S'} OK
+
+Train set = examples [0, 8]
+-------------------------
+| [oblacnost]
+|    |oblacnost  = 0.463|
+|    |srazky     = 0.241|
+|    |teplota    = 0.336|
+|    |vhkost     = 0.252|
+| => polojasno ['9']
+|    | {'Q'}
+| => oblacno ['3', '4', '7']
+|    | [srazky]
+|    |    |srazky     = 0.918|
+|    |    |teplota    = 0.918|
+|    |    |vhkost     = 0.918|
+|    | => slabe ['4']
+|    |    | {'R'}
+|    | => vydatne ['3', '7']
+|    |    | {'S'}
+| => zatazeno ['1', '2', '5', '6', '8']
+|    | [teplota]
+|    |    |srazky     = 0.420|
+|    |    |teplota    = 0.971|
+|    |    |vhkost     = 0.420|
+|    | => nizka ['2', '5']
+|    |    | {'R'}
+|    | => stredni ['1']
+|    |    | {'S'}
+|    | => vysoka ['6', '8']
+|    |    | [vhkost]
+|    |    |    |srazky     = 0.000|
+|    |    |    |vhkost     = 1.000|
+|    |    | => mala ['6']
+|    |    |    | {'R'}
+|    |    | => velka ['8']
+|    |    |    | {'Q'}
+-------------------------
+Test set = examples [9, 11]
+9: ['10', 'R', 'zatazeno', 'vydatne', 'stredni', 'mala']  =>  {'S'} FAIL
+
+10: ['11', 'R', 'oblacno', 'slabe', 'vysoka', 'velka']  =>  {'R'} OK
+
+11: ['12', 'S', 'oblacno', 'slabe', 'vysoka', 'mala']  =>  {'R'} FAIL

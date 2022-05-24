@@ -1,0 +1,201 @@
+# fpga_xc3s50: UCF file XC3S50
+# Copyright (C) 2006 Brno University of Technology,
+#                    Faculty of Information Technology
+# Author(s): Jan Markovic <xmarko04@stud.fit.vutbr.cz>
+#
+# LICENSE TERMS
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+# 3. All advertising materials mentioning features or use of this software
+#    or firmware must display the following acknowledgement:
+#
+#      This product includes software developed by the University of
+#      Technology, Faculty of Information Technology, Brno and its
+#      contributors.
+#
+# 4. Neither the name of the Company nor the names of its contributors
+#    may be used to endorse or promote products derived from this
+#    software without specific prior written permission.
+#
+# This software or firmware is provided ``as is'', and any express or implied
+# warranties, including, but not limited to, the implied warranties of
+# merchantability and fitness for a particular purpose are disclaimed.
+# In no event shall the company or contributors be liable for any
+# direct, indirect, incidental, special, exemplary, or consequential
+# damages (including, but not limited to, procurement of substitute
+# goods or services; loss of use, data, or profits; or business
+# interruption) however caused and on any theory of liability, whether
+# in contract, strict liability, or tort (including negligence or
+# otherwise) arising in any way out of the use of this software, even
+# if advised of the possibility of such damage.
+#
+# $Id$
+#
+#
+
+# CLK
+NET "SMCLK"    LOC = "P80"  | PERIOD=8 MHz HIGH 50% | CLOCK_DEDICATED_ROUTE = FALSE;
+NET "ACLK"     LOC = "P79"  ;
+NET "FCLK"     LOC = "P76"  ;
+
+
+# LED
+NET "LEDF"     LOC = "P81"  ; #yellow D4
+
+# SPI
+#NET "SPI_CLK"  LOC = "P102";
+#NET "SPI_CS"   LOC = "P101";
+#NET "SPI_FPGA_CS" LOC = "P83"; #green LED D3
+#NET "SPI_DI"   LOC = "P100"; #MISO
+#NET "SPI_DO"   LOC = "P92"; #MOSI
+
+
+# Keyboard 4x4
+NET "KIN<0>"   LOC = "P171"  ;
+NET "KIN<1>"   LOC = "P175"  ;
+NET "KIN<2>"   LOC = "P178"  ;
+NET "KIN<3>"   LOC = "P181"  ;
+
+NET "KOUT<0>"  LOC = "P183" | PULLUP ;
+NET "KOUT<1>"  LOC = "P185" | PULLUP ;
+NET "KOUT<2>"  LOC = "P189" | PULLUP ;
+NET "KOUT<3>"  LOC = "P191" | PULLUP ;
+
+
+# Display
+NET "LE"       LOC = "P93"  ;
+NET "LRS"      LOC = "P95"  ;
+NET "LRW"      LOC = "P94"  ;
+
+NET "LD<0>"    LOC = "P90"  ;
+NET "LD<1>"    LOC = "P87"  ;
+NET "LD<2>"    LOC = "P86"  ;
+NET "LD<3>"    LOC = "P85"  ;
+NET "LD<4>"    LOC = "P78"  ;
+NET "LD<5>"    LOC = "P77"  ;
+NET "LD<6>"    LOC = "P74"  ;
+NET "LD<7>"    LOC = "P72"  ;
+
+
+# SDRAM
+NET "RA<0>"    LOC = "P148" ;
+NET "RA<1>"    LOC = "P149" ;
+NET "RA<2>"    LOC = "P150" ;
+NET "RA<3>"    LOC = "P152" ;
+NET "RA<4>"    LOC = "P138" ;
+NET "RA<5>"    LOC = "P133" ;
+NET "RA<6>"    LOC = "P132" ;
+NET "RA<7>"    LOC = "P131" ;
+NET "RA<8>"    LOC = "P130" ;
+NET "RA<9>"    LOC = "P125" ;
+NET "RA<10>"   LOC = "P147" ;
+NET "RA<11>"   LOC = "P124" ;
+NET "RA<12>"   LOC = "P123" ;
+NET "RA<13>"   LOC = "P144" ;
+NET "RA<14>"   LOC = "P146" ;
+
+NET "RD<0>"    LOC = "P106" ;
+NET "RD<1>"    LOC = "P107" ;
+NET "RD<2>"    LOC = "P111" ;
+NET "RD<3>"    LOC = "P113" ;
+NET "RD<4>"    LOC = "P117" ;
+NET "RD<5>"    LOC = "P116" ;
+NET "RD<6>"    LOC = "P115" ;
+NET "RD<7>"    LOC = "P114" ;
+
+NET "RDQM"     LOC = "P119" ;
+NET "RCS"      LOC = "P143" ;
+NET "RRAS"     LOC = "P141" ;
+NET "RCAS"     LOC = "P140" ;
+NET "RWE"      LOC = "P139" ;
+NET "RCLK"     LOC = "P120" ;
+NET "RCKE"     LOC = "P122" ;
+
+
+# P3M
+NET "P3M<0>"   LOC = "P155" | PULLUP; #P3.0, RESET
+NET "P3M<1>"   LOC = "P156" ;
+NET "P3M<2>"   LOC = "P161" ;
+NET "P3M<3>"   LOC = "P162" ;
+NET "P3M<4>"   LOC = "P165" ;
+NET "P3M<5>"   LOC = "P166" ;
+NET "P3M<6>"   LOC = "P167" ;
+NET "P3M<7>"   LOC = "P168" ;
+
+
+# AFBUS
+NET "AFBUS<0>"    LOC = "P52" | PERIOD=6 MHz HIGH 50%;
+NET "AFBUS<1>"    LOC = "P51" ;
+NET "AFBUS<2>"    LOC = "P57" ;
+NET "AFBUS<3>"    LOC = "P58" ;
+NET "AFBUS<4>"    LOC = "P61" ;
+NET "AFBUS<5>"    LOC = "P62" ;
+NET "AFBUS<6>"    LOC = "P63" ;
+NET "AFBUS<7>"    LOC = "P64" ;
+NET "AFBUS<8>"    LOC = "P65" ;
+NET "AFBUS<9>"    LOC = "P67" ;
+NET "AFBUS<10>"   LOC = "P71" ;
+NET "AFBUS<11>"   LOC = "P68" ;
+
+
+# X(0..45) / PC interface
+NET "X<0>"    LOC = "P169" | PULLDOWN; # P1.7, IRQ
+NET "X<1>"    LOC = "P172"  ;
+NET "X<2>"    LOC = "P176"  ;
+NET "X<3>"    LOC = "P180"  ;
+NET "X<4>"    LOC = "P182"  ;
+NET "X<5>"    LOC = "P184"  ;
+NET "X<6>"    LOC = "P187"  ;
+NET "X<7>"    LOC = "P190"  ;
+NET "X<8>"    LOC = "P194"  ;
+NET "X<9>"    LOC = "P196"  ;
+NET "X<10>"   LOC = "P197" ;
+NET "X<11>"   LOC = "P198" ;
+NET "X<12>"   LOC = "P199" ;
+NET "X<13>"   LOC = "P203" ;
+NET "X<14>"   LOC = "P204" ;
+NET "X<15>"   LOC = "P205" ;
+NET "X<16>"   LOC = "P2"   ;
+NET "X<17>"   LOC = "P3"   ;
+NET "X<18>"   LOC = "P7"   ;
+NET "X<19>"   LOC = "P9"   ;
+NET "X<20>"   LOC = "P10"  ;
+NET "X<21>"   LOC = "P11"  ;
+NET "X<22>"   LOC = "P12"  ;
+NET "X<23>"   LOC = "P13"  ;
+NET "X<24>"   LOC = "P15"  ;
+NET "X<25>"   LOC = "P16"  ;
+NET "X<26>"   LOC = "P18"  ;
+
+# VGA
+NET "X<27>"   LOC = "P19" ;  # BLUE2
+NET "X<28>"   LOC = "P20" ;  # BLUE1
+NET "X<29>"   LOC = "P21" ;  # BLUE0
+NET "X<30>"   LOC = "P26" ;  # GREEN2
+NET "X<31>"   LOC = "P27" ;  # GREEN1
+NET "X<32>"   LOC = "P28" ;  # GREEN0
+NET "X<33>"   LOC = "P29" ;  # RED0
+NET "X<34>"   LOC = "P34" ;  # RED1
+NET "X<35>"   LOC = "P35" ;  # RED2
+NET "X<36>"   LOC = "P36" ;  # VSYNC
+NET "X<37>"   LOC = "P37" ;  # HSYNC
+
+# PS/2
+NET "X<38>"   LOC = "P39" ;  # K_DATA
+NET "X<39>"   LOC = "P40" ;  # K_CLK
+NET "X<40>"   LOC = "P42" ;  # M_DATA
+NET "X<41>"   LOC = "P43" ;  # M_CLK
+
+# SERIAL RS232
+NET "X<42>"   LOC = "P44" ;  # RXD
+NET "X<43>"   LOC = "P45" ;  # TXD
+NET "X<44>"   LOC = "P46" ;  # RTS
+NET "X<45>"   LOC = "P48" ;  # CTS
