@@ -1,0 +1,161 @@
+/**
+ * @file main_sensor.c
+ * 
+ * @brief PulseSensor Test
+ * @date 2022-12-10
+ * @author Karel Jirgl (xjirgl01)
+ * @update 2022-12-13
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "esp_log.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "driver/adc.h"
+#include "esp_adc_cal.h"
+
+
+void app_main(void)
+{
+    // setup ADC on analog pin (GPIO 34)
+	esp_adc_cal_characteristics_t adc1_chars;
+    esp_adc_cal_characterize(ADC_UNIT_1, ADC_ATTEN_DB_11, ADC_WIDTH_BIT_DEFAULT, 0, &adc1_chars);
+    ESP_ERROR_CHECK(adc1_config_width(ADC_WIDTH_BIT_DEFAULT));
+    ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_CHANNEL_6, ADC_ATTEN_DB_11));
+
+
+
+	// sensor loop
+	#define lastDataCount 100
+	int lastData[lastDataCount] = {0};
+	int lastDataAverage[lastDataCount] = {0};
+
+	const int currentAverageFromSamples = 10; // average from x samples
+	int currentAverage = 0;
+
+	const int lastLowestFromSamples = 10; // last lowest from x samples
+	int lastLowest = 0;
+
+	
+	int beatFound = 0; // only for visualization
+	int beatSamplesCount = 0; // number of samples from last beat
+
+	const int peakStartSamples = 10;
+	const int peakWaitSamples = 20;
+	const int peakDifference = 7;
+	int peakStart = -1;
+	int peakValue = 0;
+	int peakWait = 0;
+
+    while (1) 
+    {
+		// get sensor value
+		int value = adc1_get_raw(ADC1_CHANNEL_6);
+        //uint32_t voltage = esp_adc_cal_raw_to_voltage(value, &adc1_chars);
+		//printf("%d,%d\n",value,voltage);
+
+
+
+		// save last x sensor values
+		for(int i = lastDataCount-1; i > 0; i--){
+			lastData[i] = lastData[i-1];
+		}
+		lastData[0] = value;
+
+
+		// get average value from last x samples
+		currentAverage = 0;
+		for(int i = 0; i < currentAverageFromSamples; i++){
+			currentAverage += lastData[i];
+		}
+		currentAverage /= currentAverageFromSamples;
+
+
+		// save last x average values
+		for(int i = lastDataCount-1; i > 0; i--){
+			lastDataAverage[i] = lastDataAverage[i-1];
+		}
+		lastDataAverage[0] = currentAverage;
+
+
+		// get lowest average value from x samples
+		lastLowest = currentAverage;
+		for(int i = 0; i < lastLowestFromSamples; i++){
+			if(lastLowest > lastDataAverage[i]){
+				lastLowest = lastDataAverage[i];
+			}
+		}
+
+
+
+
+
+		beatFound = 0;
+		beatSamplesCount++;
+
+
+		// new peak found
+		if(peakStart == -1 && lastDataAverage[0] < lastDataAverage[1]){
+			// last 6 average values are ascending
+			if(lastDataAverage[1] >= lastDataAverage[2] && lastDataAverage[2] >= lastDataAverage[3] && lastDataAverage[3] >= lastDataAverage[4]
+			&& lastDataAverage[4] >= lastDataAverage[5] && lastDataAverage[5] >= lastDataAverage[6] && lastDataAverage[6] >= lastDataAverage[7]
+			//&& lastDataAverage[7] >= lastDataAverage[8] && lastDataAverage[8] >= lastDataAverage[9] && lastDataAverage[9] >= lastDataAverage[10]
+			//&& lastDataAverage[10] >= lastDataAverage[11] && lastDataAverage[11] >= lastDataAverage[12] && lastDataAverage[12] >= lastDataAverage[13]
+			){
+				// difference between last lowest average value and current average is more than 7 points
+				if(currentAverage-lastLowest > peakDifference) {
+					// wait few samples for next peak
+					if(peakWait == 0) {
+						peakStart = peakStartSamples;
+						peakValue = lastDataAverage[1];
+						beatFound = 100;
+					}
+				}
+			}
+		}
+
+		// wait few samples to check beat
+		if(peakStart > 0) {
+			peakStart--;
+
+		// check beat from last found peak
+		} else if(peakStart == 0) {
+			peakStart--;
+			//if(lastDataAverage[1] <= lastDataAverage[2] && lastDataAverage[2] <= lastDataAverage[3] && lastDataAverage[3] <= lastDataAverage[4]
+			//&& lastDataAverage[4] <= lastDataAverage[5] && lastDataAverage[5] <= lastDataAverage[6] && lastDataAverage[6] <= lastDataAverage[7]
+			//&& lastDataAverage[7] <= lastDataAverage[8] && lastDataAverage[8] <= lastDataAverage[9] && lastDataAverage[9] <= lastDataAverage[10]
+			//&& lastDataAverage[10] <= lastDataAverage[11] && lastDataAverage[11] <= lastDataAverage[12] && lastDataAverage[12] <= lastDataAverage[13]
+			//){
+				// difference between peak average value and current average is more than 7 points
+				if(peakValue-lastLowest > peakDifference) {
+					
+					
+
+					printf("BPM: %d (finger calibration value: [3500 >] %d [> 2500])\n", 6000/beatSamplesCount, value);
+
+					
+					peakWait = peakWaitSamples;
+					beatSamplesCount = 0;
+					beatFound = 100;
+				}
+			//}
+		}
+
+		// wait few samples for next peak
+		if(peakWait > 0) {
+			peakWait--;
+		}
+
+		// beat not found for more than 10 seconds
+		if(beatSamplesCount > 1000) { // 10 seconds
+			printf("BPM: (unknown) (finger calibration value: [3500 >] %d [> 2500])\n", value);
+			beatSamplesCount = 0;
+		}
+	
+		
+		
+		//printf("%d,%d,%d\n", value, currentAverage, currentAverage+beatFound);
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
+}
